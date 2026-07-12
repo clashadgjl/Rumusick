@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск музыки</title>
+    <style>
+        body { font-family: sans-serif; background: #121212; color: #fff; text-align: center; padding-top: 50px; }
+        input { padding: 10px; width: 300px; border-radius: 4px; border: none; margin: 5px; }
+        button { padding: 10px 20px; background: #3498db; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Поиск торрентов на RuTracker</h2>
+    <input type="text" id="artist" placeholder="Исполнитель">
+    <input type="text" id="track" placeholder="Название трека/альбома">
+    <br>
+    <button onclick="searchTorrent()">Найти</button>
+
+    <script>
+        function searchTorrent() {
+            const artist = encodeURIComponent(document.getElementById('artist').value.trim());
+            const track = encodeURIComponent(document.getElementById('track').value.trim());
+            
+            if (!artist && !track) return alert('Введите хоть что-нибудь!');
+            
+            // Формируем запрос для встроенного поиска RuTracker (требуется вход на сайт)
+            const query = `${artist} ${track}`.trim();
+            const url = `https://rutracker.org/forum/tracker.php?nm=${query}`;
+            
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
