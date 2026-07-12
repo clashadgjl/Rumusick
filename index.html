@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск музыки на RuTracker</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #121212; 
+            color: #fff; 
+            text-align: center; 
+            padding-top: 50px; 
+        }
+        .search-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        input, select { 
+            padding: 12px; 
+            width: 100%; 
+            border-radius: 6px; 
+            border: 1px solid #333; 
+            margin-bottom: 15px; 
+            background: #2a2a2a;
+            color: #fff;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        button { 
+            padding: 12px; 
+            width: 100%;
+            background: #3498db; 
+            color: #fff; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-container">
+        <h2>Поиск торрентов</h2>
+        
+        <input type="text" id="artist" placeholder="Исполнитель">
+        <input type="text" id="track" placeholder="Название трека / альбома">
+        
+        <select id="category">
+            <option value="-1">Все разделы (Музыка)</option>
+            <option value="all_lossless">Вся Lossless музыка (Флак / Ape)</option>
+            <option value="all_mp3">Вся MP3 музыка</option>
+            <option value="1195">Рэп, Хип-Хоп и R'n'B (Lossless)</option>
+            <option value="423">Рэп, Хип-Хоп и R'n'B (MP3)</option>
+            <option value="1190">Рок-музыка (Lossless)</option>
+            <option value="411">Рок-музыка (MP3)</option>
+            <option value="1192">Электронная музыка (Lossless)</option>
+            <option value="416">Электронная музыка (MP3)</option>
+            <option value="1704">Саундтреки и Караоке</option>
+        </select>
+        
+        <button onclick="searchTorrent()">Найти на RuTracker</button>
+    </div>
+
+    <script>
+        function searchTorrent() {
+            const artist = encodeURIComponent(document.getElementById('artist').value.trim());
+            const track = encodeURIComponent(document.getElementById('track').value.trim());
+            const category = document.getElementById('category').value;
+            
+            if (!artist && !track) {
+                return alert('Введите имя исполнителя или название трека!');
+            }
+            
+            const query = `${artist} ${track}`.trim();
+            let url = `https://rutracker.org/forum/tracker.php?nm=${query}`;
+            
+            // Если выбрана конкретная одиночная категория (ID числом)
+            if (category !== "-1" && !category.startsWith("all_")) {
+                url += `&f=${category}`;
+            } 
+            // Если выбран весь Lossless (RuTracker умеет искать по корневым группам через c=...)
+            else if (category === "all_lossless") {
+                url += `&c=23`; // ID корневой категории Lossless
+            } 
+            // Если выбран весь MP3
+            else if (category === "all_mp3") {
+                url += `&c=22`; // ID корневой категории MP3
+            }
+            
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
